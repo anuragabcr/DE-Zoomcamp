@@ -1,0 +1,48 @@
+Windows
+
+docker run -it \
+    -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="admin" \
+    -e POSTGRES_DB="ny_taxi" \
+    -v c:/host/machine/path:/var/lib/postgresql/data \
+    -p 5432:5432 \
+    postgres:13
+
+
+Linux/MAC
+
+docker run -it \
+    -e POSTGRES_USER="root" \
+    -e POSTGRES_PASSWORD="admin" \
+    -e POSTGRES_DB="ny_taxi" \
+    -v  $(pwd)/ny_taxi_postgres_data:/var/lib/postgresql/data \
+    -p 5432:5432 \
+    postgres:13
+
+
+Running ingest data as python script
+
+URL="https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz"
+
+python3 ingest_data.py \
+  --user=root \
+  --password=admin \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_trips \
+  --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
+
+
+Running data ingestion in docker
+
+docker build -t taxi_ingest:v001 .
+
+docker run -it taxi_ingest:v001 \
+  --user=root \
+  --password=admin \
+  --host=localhost \
+  --port=5432 \
+  --db=ny_taxi \
+  --table_name=yellow_taxi_trips \
+  --url=https://github.com/DataTalksClub/nyc-tlc-data/releases/download/yellow/yellow_tripdata_2021-01.csv.gz
